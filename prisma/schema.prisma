@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Asset {
+  id    Int     @id @default(autoincrement())
+  name  String
+  desc String
+  configs Config[]
+}
+
+model Config {
+  id        Int     @id @default(autoincrement())
+  name     String
+  desc   String
+
+  asset    Asset?    @relation(fields: [assetId], references: [id])
+  assetId  Int?
+
+  parentConfigId Int?
+  parent   Config?   @relation("ParentChildren", fields: [parentConfigId], references: [id])
+  children  Config[]  @relation("ParentChildren")
+}
+
+
